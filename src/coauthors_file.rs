@@ -24,7 +24,7 @@ pub fn store_coauthor(coauthor: Coauthor) {
     fs::write(coauthors_file(), &toml).expect("Unable to write file");
 }
 
-fn read_coauthors() -> Vec<Coauthor> {
+pub fn read_coauthors() -> Vec<Coauthor> {
     let file_contents = fs::read_to_string(coauthors_file()).expect("Unable to read file");
     let coauthors_storage: CoauthorsStorage = toml::from_str(&file_contents).unwrap();
 

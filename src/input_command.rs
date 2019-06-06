@@ -1,6 +1,7 @@
 #[derive(Debug, PartialEq, Eq)]
 pub enum InputCommand {
     Add,
+    List,
     Help,
     Unknown(String),
 }
@@ -8,6 +9,7 @@ pub enum InputCommand {
 pub fn parse_command(arguments: Vec<String>) -> InputCommand {
     match arguments[1].as_ref() {
         "a" | "add" => InputCommand::Add,
+        "l" | "list" => InputCommand::List,
         "h" | "help" => InputCommand::Help,
         anything => InputCommand::Unknown(anything.to_string()),
     }
@@ -30,6 +32,18 @@ mod tests {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "add"]),
             InputCommand::Add
+        );
+    }
+
+    #[test]
+    fn test_list_command_parsing() {
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "l"]),
+            InputCommand::List
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "list"]),
+            InputCommand::List
         );
     }
 
