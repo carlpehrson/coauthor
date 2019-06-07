@@ -2,16 +2,26 @@
 pub enum InputCommand {
     Add,
     List,
+    Remove(String),
     Help,
     Unknown(String),
 }
 
-pub fn parse_command(arguments: Vec<String>) -> InputCommand {
+pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static str> {
     match arguments[1].as_ref() {
-        "a" | "add" => InputCommand::Add,
-        "l" | "list" => InputCommand::List,
-        "h" | "help" => InputCommand::Help,
-        anything => InputCommand::Unknown(anything.to_string()),
+        "a" | "add" => Ok(InputCommand::Add),
+
+        "l" | "list" => Ok(InputCommand::List),
+
+        "r" | "remove" => {
+            if arguments.len() < 3 { return Err("No username defined"); }
+
+            return Ok(InputCommand::Remove(arguments[2].to_string()));
+        },
+
+        "h" | "help" => Ok(InputCommand::Help),
+
+        anything => Ok(InputCommand::Unknown(anything.to_string())),
     }
 }
 
@@ -27,11 +37,30 @@ mod tests {
     fn test_add_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "a"]),
-            InputCommand::Add
+            Ok(InputCommand::Add)
         );
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "add"]),
-            InputCommand::Add
+            Ok(InputCommand::Add)
+        );
+    }
+
+
+    #[test]
+    fn test_remove_command_parsing() {
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "r", "username"]),
+            Ok(InputCommand::Remove(String::from("username")))
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "remove", "username"]),
+            Ok(InputCommand::Remove(String::from("username")))
+        );
+
+        // When third argument is missing
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "remove"]),
+            Err("No username defined")
         );
     }
 
@@ -39,11 +68,11 @@ mod tests {
     fn test_list_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "l"]),
-            InputCommand::List
+            Ok(InputCommand::List)
         );
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "list"]),
-            InputCommand::List
+            Ok(InputCommand::List)
         );
     }
 
@@ -51,11 +80,11 @@ mod tests {
     fn test_help_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "h"]),
-            InputCommand::Help
+            Ok(InputCommand::Help)
         );
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "help"]),
-            InputCommand::Help
+            Ok(InputCommand::Help)
         );
     }
 
@@ -63,7 +92,7 @@ mod tests {
     fn test_unkown_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "anything"]),
-            InputCommand::Unknown(String::from("anything"))
+            Ok(InputCommand::Unknown(String::from("anything")))
         );
     }
 }
