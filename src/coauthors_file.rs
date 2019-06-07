@@ -14,7 +14,7 @@ fn coauthors_file() -> String {
     let file_path = Path::new(&file_path_string);
 
     if !Path::new(&file_path).exists() {
-       fs::File::create(file_path);
+       let _ = fs::File::create(file_path);
     }
 
     return file_path_string;
@@ -23,13 +23,18 @@ fn coauthors_file() -> String {
 pub fn store_coauthor(coauthor: Coauthor) {
     let mut coauthors = read_coauthors();
     coauthors.push(coauthor);
-    let coauthor_list = CoauthorsStorage {
-        coauthors: coauthors,
-    };
 
-    let toml = toml::to_string(&coauthor_list).unwrap();
+    write_coauthors(coauthors);
+}
 
-    fs::write(coauthors_file(), &toml).expect("Unable to write file");
+pub fn remove_coauthor_by_username(username: String) {
+    let filtered_coauthors = read_coauthors()
+        .iter()
+        .filter(|coauthor| coauthor.username != username)
+        .cloned()
+        .collect();
+
+    write_coauthors(filtered_coauthors);
 }
 
 pub fn read_coauthors() -> Vec<Coauthor> {
@@ -42,4 +47,14 @@ pub fn read_coauthors() -> Vec<Coauthor> {
     let coauthors_storage: CoauthorsStorage = toml::from_str(&file_contents).unwrap();
 
     return coauthors_storage.coauthors;
+}
+
+fn write_coauthors(coauthors: Vec<Coauthor>) {
+    let coauthor_list = CoauthorsStorage {
+        coauthors: coauthors,
+    };
+
+    let toml = toml::to_string(&coauthor_list).unwrap();
+
+    fs::write(coauthors_file(), &toml).expect("Unable to write file");
 }
