@@ -34,6 +34,10 @@ fn run_command(command: InputCommand) {
             coauthors_file::remove_coauthor_by_username(username);
         }
 
+        InputCommand::Set(usernames) => {
+            println!("{:#?}", usernames);
+        }
+
         InputCommand::Help => print_help_section(),
 
         InputCommand::Unknown(action) => {

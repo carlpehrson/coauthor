@@ -3,6 +3,7 @@ pub enum InputCommand {
     Add,
     List,
     Remove(String),
+    Set(Vec<String>),
     Help,
     Unknown(String),
 }
@@ -18,6 +19,12 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
 
             return Ok(InputCommand::Remove(arguments[2].to_string()));
         },
+
+        "s" | "set" => {
+            if arguments.len() < 3 { return Err("No coauthor(s) defined"); }
+
+            return Ok(InputCommand::Set(arguments[2..].to_vec()));
+        }
 
         "h" | "help" => Ok(InputCommand::Help),
 
@@ -73,6 +80,32 @@ mod tests {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "list"]),
             Ok(InputCommand::List)
+        );
+    }
+
+
+    #[test]
+    fn test_set_command_parsing() {
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "s", "username"]),
+            Ok(InputCommand::Set(vec_of_strings!["username"]))
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "set", "username"]),
+            Ok(InputCommand::Set(vec_of_strings!["username"]))
+        );
+
+        // With multiple coauthors
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "set", "username1", "username2"]),
+            Ok(InputCommand::Set(vec_of_strings!["username1", "username2"]))
+        );
+
+
+        // When third argument is missing
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "set"]),
+            Err("No coauthor(s) defined")
         );
     }
 
