@@ -35,7 +35,18 @@ fn run_command(command: InputCommand) {
         }
 
         InputCommand::Set(usernames) => {
-            println!("{:#?}", usernames);
+            match coauthors_file::get_coauthors(usernames) {
+                Ok(coauthors) => {
+                    println!("setting {:#?}", coauthors);
+                },
+
+                Err(non_existing_usernames) => {
+                    println!(
+                        "{} could not be found in the storage. run `coauthor list` to see which one are available",
+                        non_existing_usernames.join(", ")
+                    );
+                }
+            }
         }
 
         InputCommand::Help => print_help_section(),
