@@ -1,11 +1,12 @@
 mod cli_input;
 mod coauthor;
 mod coauthors_file;
+mod git_commit_template_file;
 mod input_command;
 
-use std::env;
 use coauthor::Coauthor;
 use input_command::InputCommand;
+use std::env;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -28,11 +29,24 @@ fn run_command(command: InputCommand) {
             for coauthor in coauthors {
                 print_coauthor(coauthor);
             }
-        },
+        }
 
         InputCommand::Remove(username) => {
             coauthors_file::remove_coauthor_by_username(username);
         }
+
+        InputCommand::Set(usernames) => match coauthors_file::get_coauthors(usernames) {
+            Ok(coauthors) => {
+                git_commit_template_file::set_current_coauthors(coauthors);
+            }
+
+            Err(non_existing_usernames) => {
+                println!(
+                        "{} could not be found in the storage. run `coauthor list` to see which one are available",
+                        non_existing_usernames.join(", ")
+                    );
+            }
+        },
 
         InputCommand::Help => print_help_section(),
 
@@ -44,7 +58,10 @@ fn run_command(command: InputCommand) {
 }
 
 fn print_coauthor(coauthor: Coauthor) {
-    println!("[{}] {} <{}>", coauthor.username, coauthor.name, coauthor.email);
+    println!(
+        "[{}] {} <{}>",
+        coauthor.username, coauthor.name, coauthor.email
+    );
 }
 
 fn print_unkown_command(command: String) {
@@ -57,11 +74,13 @@ fn print_help_section() {
     Store coauthors and update them easily in your commit template.
 
     USAGE:
-      add                   Starts a prompt to add an coauthor.
-      list                  Lists all stored coauthors.
-      remove [username]     Removes a coauthor from the local machine.
+      add                               Starts a prompt to add an coauthor.
+      list                              Lists all stored coauthors.
+      remove [username]                 Removes a coauthor from the local machine.
 
-      help                  Show this help section.
+      set [username [username ..]]      Updates the git template with predefined coauthors.
+
+      help                              Show this help section.
     "#
     );
 }
