@@ -28,6 +28,10 @@ fn template_file() -> String {
         let file_path_string = tilde("~/.config/git/.gitmessage").to_string();
         let file_path = Path::new(&file_path_string);
         let _ = fs::File::create(file_path);
+        let _ = Command::new("git")
+            .args(&["config", "set", "commit.template", &file_path_string])
+            .output()
+            .expect("Failed to configure the git template file");
         println!("commit template missing. Added it to {}", file_path_string);
 
         return file_path_string;
