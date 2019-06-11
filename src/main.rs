@@ -74,11 +74,13 @@ fn print_help_section() {
     Store coauthors and update them easily in your commit template.
 
     USAGE:
-      add                   Starts a prompt to add an coauthor.
-      list                  Lists all stored coauthors.
-      remove [username]     Removes a coauthor from the local machine.
+      add                               Starts a prompt to add an coauthor.
+      list                              Lists all stored coauthors.
+      remove [username]                 Removes a coauthor from the local machine.
 
-      help                  Show this help section.
+      set [username [username ..]]      Updates the git template with predefined coauthors.
+
+      help                              Show this help section.
     "#
     );
 }
