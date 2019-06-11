@@ -15,13 +15,17 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
         "l" | "list" => Ok(InputCommand::List),
 
         "r" | "remove" => {
-            if arguments.len() < 3 { return Err("No username defined"); }
+            if arguments.len() < 3 {
+                return Err("No username defined");
+            }
 
             return Ok(InputCommand::Remove(arguments[2].to_string()));
-        },
+        }
 
         "s" | "set" => {
-            if arguments.len() < 3 { return Err("No coauthor(s) defined"); }
+            if arguments.len() < 3 {
+                return Err("No coauthor(s) defined");
+            }
 
             return Ok(InputCommand::Set(arguments[2..].to_vec()));
         }
@@ -51,7 +55,6 @@ mod tests {
             Ok(InputCommand::Add)
         );
     }
-
 
     #[test]
     fn test_remove_command_parsing() {
@@ -83,7 +86,6 @@ mod tests {
         );
     }
 
-
     #[test]
     fn test_set_command_parsing() {
         assert_eq!(
@@ -97,10 +99,14 @@ mod tests {
 
         // With multiple coauthors
         assert_eq!(
-            parse_command(vec_of_strings!["bin/coauthor", "set", "username1", "username2"]),
+            parse_command(vec_of_strings![
+                "bin/coauthor",
+                "set",
+                "username1",
+                "username2"
+            ]),
             Ok(InputCommand::Set(vec_of_strings!["username1", "username2"]))
         );
-
 
         // When third argument is missing
         assert_eq!(

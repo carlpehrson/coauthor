@@ -14,7 +14,7 @@ fn coauthors_file() -> String {
     let file_path = Path::new(&file_path_string);
 
     if !Path::new(&file_path).exists() {
-       let _ = fs::File::create(file_path);
+        let _ = fs::File::create(file_path);
     }
 
     return file_path_string;
@@ -40,22 +40,22 @@ pub fn remove_coauthor_by_username(username: String) {
 pub fn get_coauthors(coauthors: Vec<String>) -> Result<Vec<Coauthor>, Vec<String>> {
     let coauthors_structs = read_coauthors();
 
-    let result: (Vec<Coauthor>, Vec<String>) = coauthors.iter()
-        .fold(
-            (vec![], vec![]),
-            |(mut matching_coauthors, mut missing_coauthors), username| {
-                let matching_coauthor = coauthors_structs.iter()
-                    .find(|coauthor| coauthor.username == username.to_string())
-                    .cloned();
+    let result: (Vec<Coauthor>, Vec<String>) = coauthors.iter().fold(
+        (vec![], vec![]),
+        |(mut matching_coauthors, mut missing_coauthors), username| {
+            let matching_coauthor = coauthors_structs
+                .iter()
+                .find(|coauthor| coauthor.username == username.to_string())
+                .cloned();
 
-                match matching_coauthor {
-                    Some(coauthor) => matching_coauthors.push(coauthor),
-                    None => missing_coauthors.push(username.to_string())
-                }
-
-                return (matching_coauthors, missing_coauthors);
+            match matching_coauthor {
+                Some(coauthor) => matching_coauthors.push(coauthor),
+                None => missing_coauthors.push(username.to_string()),
             }
-        );
+
+            return (matching_coauthors, missing_coauthors);
+        },
+    );
 
     let (found_coauthors, missing_coauthors) = result;
 
