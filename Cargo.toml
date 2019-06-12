@@ -8,3 +8,4 @@ edition = "2018"
 serde = { version = "1.0.92", features = ["derive"]}
 shellexpand = "1.0.0"
 toml = "0.5"
+exitfailure = "0.5.1"
