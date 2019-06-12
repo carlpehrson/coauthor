@@ -9,6 +9,10 @@ pub enum InputCommand {
 }
 
 pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static str> {
+    if arguments.get(1).is_none() {
+        return Ok(InputCommand::Help);
+    }
+
     match arguments[1].as_ref() {
         "a" | "add" => Ok(InputCommand::Add),
 
@@ -53,6 +57,14 @@ mod tests {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "add"]),
             Ok(InputCommand::Add)
+        );
+    }
+
+    #[test]
+    fn test_command_parsing_with_no_input() {
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor"]),
+            Ok(InputCommand::Help)
         );
     }
 

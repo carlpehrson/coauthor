@@ -5,16 +5,18 @@ mod git_commit_template_file;
 mod input_command;
 
 use coauthor::Coauthor;
+use exitfailure::ExitFailure;
 use input_command::InputCommand;
 use std::env;
 
-fn main() {
+fn main() -> Result<(), ExitFailure> {
     let args: Vec<String> = env::args().collect();
 
     match input_command::parse_command(args) {
         Ok(command) => run_command(command),
         Err(error) => eprintln!("{}", error),
     }
+    Ok(())
 }
 
 fn run_command(command: InputCommand) {
