@@ -1,4 +1,6 @@
 use crate::coauthor::Coauthor;
+use crate::coauthors_file;
+use regex::Regex;
 use shellexpand::tilde;
 use std::fs;
 use std::path::Path;
@@ -8,6 +10,36 @@ pub fn set_current_coauthors(coauthors: Vec<Coauthor>) {
     let template_string = coauthor_template_string(coauthors);
 
     fs::write(template_file(), &template_string).expect("Unable to write file");
+}
+
+pub fn current_coauthors() -> Option<Vec<Coauthor>> {
+    let file_contents = fs::read_to_string(template_file()).expect("Unable to read file");
+    let usernames: Vec<Coauthor> = file_contents.lines().fold(vec![], |mut coauthors, line| {
+        match fetch_user_from_coauthored_line(line.to_string()) {
+            None => coauthors,
+            Some(coauthor) => {
+                coauthors.push(coauthor);
+                coauthors
+            }
+        }
+    });
+
+    if usernames.len() > 0 {
+        return Some(usernames);
+    } else {
+        return None;
+    }
+}
+
+fn fetch_user_from_coauthored_line(line: String) -> Option<Coauthor> {
+    let re = Regex::new(r"^Co-Authored-By:.*<(.*)>$").unwrap();
+
+    if let Some(captures) = re.captures(&line) {
+        let email = captures.get(1).map_or("", |m| m.as_str());
+        return coauthors_file::get_coauthor_by_email(email.to_string());
+    } else {
+        return None;
+    };
 }
 
 fn template_file() -> String {

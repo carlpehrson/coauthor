@@ -37,6 +37,15 @@ pub fn remove_coauthor_by_username(username: String) {
     write_coauthors(filtered_coauthors);
 }
 
+pub fn get_coauthor_by_email(email: String) -> Option<Coauthor> {
+    let coauthors = read_coauthors();
+
+    return coauthors
+        .iter()
+        .find(|coauthor| coauthor.email == email)
+        .cloned();
+}
+
 pub fn get_coauthors(coauthors: Vec<String>) -> Result<Vec<Coauthor>, Vec<String>> {
     let coauthors_structs = read_coauthors();
 

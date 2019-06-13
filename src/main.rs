@@ -50,9 +50,22 @@ fn run_command(command: InputCommand) {
             }
         },
 
+        InputCommand::Current => {
+            let coauthors = git_commit_template_file::current_coauthors();
+
+            match coauthors {
+                None => println!("There is no active coauthors"),
+                Some(coauthors) => {
+                    for coauthor in coauthors {
+                        print_coauthor(coauthor);
+                    }
+                }
+            }
+        },
+
         InputCommand::Clear => {
             git_commit_template_file::set_current_coauthors(vec![]);
-        }
+        },
 
         InputCommand::Help => print_help_section(),
 
@@ -85,6 +98,7 @@ fn print_help_section() {
       remove [username]                 Removes a coauthor from the local machine.
 
       set [username [username ..]]      Updates the git template with predefined coauthors.
+      current                           Show a list of active coauthors.
       clear                             Removes all coauthors from the commit template.
 
       help                              Show this help section.
