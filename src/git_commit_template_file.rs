@@ -5,12 +5,7 @@ use std::path::Path;
 use std::process::Command;
 
 pub fn set_current_coauthors(coauthors: Vec<Coauthor>) {
-    let coauthor_strings: Vec<String> = coauthors
-        .iter()
-        .map(|coauthor| to_coauthored_string(coauthor))
-        .collect();
-
-    let template_string = coauthor_template_string(coauthor_strings);
+    let template_string = coauthor_template_string(coauthors);
 
     fs::write(template_file(), &template_string).expect("Unable to write file");
 }
@@ -40,15 +35,30 @@ fn template_file() -> String {
     return path;
 }
 
-fn coauthor_template_string(coauthor_strings: Vec<String>) -> String {
+fn coauthor_template_string(coauthors: Vec<Coauthor>) -> String {
+    let active_coauthors_string = active_coauthors_string(coauthors);
+
     return [
         "", // The convention is that there should be two empty lines
         "", // in a row before the coauthors are defined
         "# Coauthors managed by coauthor:",
-        &coauthor_strings.join("\n"),
+        &active_coauthors_string,
         "# coauthor end",
     ]
     .join("\n");
+}
+
+fn active_coauthors_string(coauthors: Vec<Coauthor>) -> String {
+    if coauthors.len() == 0 {
+        return "# No active coauthors".to_string();
+    } else {
+        let coauthor_strings: Vec<String> = coauthors
+            .iter()
+            .map(|coauthor| to_coauthored_string(coauthor))
+            .collect();
+
+        return coauthor_strings.join("\n");
+    }
 }
 
 fn to_coauthored_string(coauthor: &Coauthor) -> String {
@@ -71,5 +81,27 @@ mod tests {
             to_coauthored_string(&coauthor),
             "Co-Authored-By: Johan Tell <johan.tell@example.com>"
         );
+    }
+
+    #[test]
+    fn coauthor_template_string_test() {
+        let coauthor = Coauthor {
+            username: "johantell".to_string(),
+            name: "Johan Tell".to_string(),
+            email: "johan.tell@example.com".to_string(),
+        };
+
+        assert_eq!(
+            coauthor_template_string(vec![coauthor]),
+            "\n\n# Coauthors managed by coauthor:\nCo-Authored-By: Johan Tell <johan.tell@example.com>\n# coauthor end"
+            )
+    }
+
+    #[test]
+    fn coauthor_template_string_empty_coauthors_test() {
+        assert_eq!(
+            coauthor_template_string(vec![]),
+            "\n\n# Coauthors managed by coauthor:\n# No active coauthors\n# coauthor end"
+        )
     }
 }
