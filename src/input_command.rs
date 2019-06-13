@@ -4,6 +4,7 @@ pub enum InputCommand {
     List,
     Remove(String),
     Set(Vec<String>),
+    Clear,
     Help,
     Unknown(String),
 }
@@ -32,6 +33,10 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
             }
 
             return Ok(InputCommand::Set(arguments[2..].to_vec()));
+        }
+
+        "c" | "clear" => {
+            return Ok(InputCommand::Clear);
         }
 
         "h" | "help" => Ok(InputCommand::Help),

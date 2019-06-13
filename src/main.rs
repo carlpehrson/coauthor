@@ -50,6 +50,10 @@ fn run_command(command: InputCommand) {
             }
         },
 
+        InputCommand::Clear => {
+            git_commit_template_file::set_current_coauthors(vec![]);
+        }
+
         InputCommand::Help => print_help_section(),
 
         InputCommand::Unknown(action) => {
@@ -81,6 +85,7 @@ fn print_help_section() {
       remove [username]                 Removes a coauthor from the local machine.
 
       set [username [username ..]]      Updates the git template with predefined coauthors.
+      clear                             Removes all coauthors from the commit template.
 
       help                              Show this help section.
     "#
