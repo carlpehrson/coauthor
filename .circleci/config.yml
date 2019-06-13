@@ -1,0 +1,54 @@
+environment: &environment
+  working_directory: ~/coauthor
+  docker:
+    - image: circleci/rust:1.35.0-stretch
+      environment:
+        CARGO_HOME: .cargo
+
+version: 2
+jobs:
+  build:
+    <<: *environment
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - build-cache-v1{{ checksum "Cargo.lock" }}
+            - build-cache
+      - run: cargo build
+      - save_cache:
+          key: build-cache-v1{{ checksum "Cargo.lock" }}
+          paths:
+            - target
+            - .cargo
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - coauthor
+
+  test:
+    <<: *environment
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: cargo test
+
+  check_formatting:
+    <<: *environment
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run: rustup component add rustfmt
+      - run: cargo fmt -- --check
+
+workflows:
+  version: 2
+  continious_integration:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - check_formatting:
+          requires:
+            - build
