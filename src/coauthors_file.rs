@@ -11,6 +11,7 @@ struct CoauthorsStorage {
 
 fn coauthors_file() -> String {
     let dir_path = tilde("~/.config/coauthor/").to_string();
+
     fs::create_dir_all(&dir_path).unwrap();
 
     let file_path_string = tilde("~/.config/coauthor/coauthors.toml").to_string();
