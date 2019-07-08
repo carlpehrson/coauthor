@@ -46,7 +46,7 @@ fn run_command(command: InputCommand) {
                 println!(
                         "{} could not be found in the storage. run `coauthor list` to see which one are available",
                         non_existing_usernames.join(", ")
-                    );
+                        );
             }
         },
 
@@ -61,11 +61,11 @@ fn run_command(command: InputCommand) {
                     }
                 }
             }
-        },
+        }
 
         InputCommand::Clear => {
             git_commit_template_file::set_current_coauthors(vec![]);
-        },
+        }
 
         InputCommand::Help => print_help_section(),
 
