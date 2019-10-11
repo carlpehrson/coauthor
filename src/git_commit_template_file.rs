@@ -51,7 +51,7 @@ fn template_file() -> String {
     let mut path = String::from_utf8_lossy(&output.stdout).to_string();
     path.pop(); // Removes trailing `\n`
 
-    if path == "" || !Path::new(&path).exists()  {
+    if path == "" || !Path::new(&path).exists() {
         let dir_path = tilde("~/.config/git/").to_string();
         fs::create_dir_all(&dir_path).unwrap();
 
