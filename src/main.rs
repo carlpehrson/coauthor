@@ -116,6 +116,9 @@ fn print_help_section() {
 
     USAGE:
       add                               Starts a prompt to add an coauthor.
+
+        --github                        Automatically fetch the information from github from username.
+
       list                              Lists all stored coauthors.
       remove [username]                 Removes a coauthor from the local machine.
 
