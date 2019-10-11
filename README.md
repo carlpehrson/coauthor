@@ -17,7 +17,21 @@ cargo install --root ~/.cargo --git https://github.com/carlpehrson/coauthor coau
 ```
 
 # Usage
-_Currently not documented, please see `coauthor help` for documentation._
+Coauthor comes with a few commands at your disposal which can be executed with
+the `coauthor` prefix, e.g. `coauthor add`. The commands can be divided
+in two groups:
+
+*Organizing your list of available coauthors*
+- `add`: Starts a prompt to add an coauthor.
+- `list`: Lists all stored coauthors.
+- `remove [username]`: Removes a coauthor from the local machine.
+
+*Controlling active coauthors*
+- `set [username [username ..]]`: Updates the git template with predefined coauthors.
+- `current`: Show a list of active coauthors.
+- `clear`: Removes all coauthors from the commit template.
+
+You can always type `coauthor help` to see the list of available commands.
 
 # Development
 Assuming you have cargo (the package manager bundled with rust) installed
