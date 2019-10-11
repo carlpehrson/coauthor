@@ -1,7 +1,7 @@
 # Coauthor
 Automate the process of adding co-authors to git commits
 
-# Getting started
+## Getting started
 Currently the only way to get Coauthor to your environment is get it through
 cargo (the package manager bundled with rust) directly from source (GitHub).
 
@@ -16,7 +16,7 @@ environment by executing this in your terminal (current path doesn't matter):
 cargo install --root ~/.cargo --git https://github.com/carlpehrson/coauthor coauthor
 ```
 
-# Usage
+## Usage
 Coauthor comes with a few commands at your disposal which can be executed with
 the `coauthor` prefix, e.g. `coauthor add`. The commands can be divided
 in two groups:
@@ -33,7 +33,7 @@ in two groups:
 
 You can always type `coauthor help` to see the list of available commands.
 
-# Development
+## Development
 Assuming you have cargo (the package manager bundled with rust) installed
 you should only have to:
 
