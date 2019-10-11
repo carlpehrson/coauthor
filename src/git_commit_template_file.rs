@@ -52,6 +52,9 @@ fn template_file() -> String {
     path.pop(); // Removes trailing `\n`
 
     if path == "" || !Path::new(&path).exists()  {
+        let dir_path = tilde("~/.config/git/").to_string();
+        fs::create_dir_all(&dir_path).unwrap();
+
         let file_path_string = tilde("~/.config/git/.gitmessage").to_string();
         let file_path = Path::new(&file_path_string);
         let _ = fs::File::create(file_path);
