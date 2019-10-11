@@ -14,7 +14,7 @@ With a valid version of rust installed you can install coauthor to your
 environment by executing this in your terminal (current path doesn't matter):
 
 ```sh
-cargo install --root ~/.cargo --git https://github.com/carlpehrson/coauthor coauthor
+cargo install --root ~/.cargo --git https://github.com/carlpehrson/coauthor --tag v0.2.0 coauthor
 ```
 
 ## Usage

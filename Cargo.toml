@@ -1,6 +1,6 @@
 [package]
 name = "coauthor"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Johan Tell <johan@mintcore.se>"]
 edition = "2018"
 
