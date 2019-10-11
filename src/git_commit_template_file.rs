@@ -51,12 +51,15 @@ fn template_file() -> String {
     let mut path = String::from_utf8_lossy(&output.stdout).to_string();
     path.pop(); // Removes trailing `\n`
 
-    if path == "" {
+    if path == "" || !Path::new(&path).exists() {
+        let dir_path = tilde("~/.config/git/").to_string();
+        fs::create_dir_all(&dir_path).unwrap();
+
         let file_path_string = tilde("~/.config/git/.gitmessage").to_string();
         let file_path = Path::new(&file_path_string);
         let _ = fs::File::create(file_path);
         let _ = Command::new("git")
-            .args(&["config", "set", "commit.template", &file_path_string])
+            .args(&["config", "commit.template", &file_path_string])
             .output()
             .expect("Failed to configure the git template file");
         println!("commit template missing. Added it to {}", file_path_string);
