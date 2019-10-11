@@ -51,7 +51,7 @@ fn template_file() -> String {
     let mut path = String::from_utf8_lossy(&output.stdout).to_string();
     path.pop(); // Removes trailing `\n`
 
-    if path == "" {
+    if path == "" || !Path::new(&path).exists()  {
         let file_path_string = tilde("~/.config/git/.gitmessage").to_string();
         let file_path = Path::new(&file_path_string);
         let _ = fs::File::create(file_path);
