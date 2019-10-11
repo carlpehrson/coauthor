@@ -13,10 +13,6 @@ use std::env;
 fn main() -> Result<(), ExitFailure> {
     let args: Vec<String> = env::args().collect();
 
-    // let username = "louiced";
-    // let response = github_api::get_coauthor_from_username(username.to_string());
-    // println!("{:#?}", response);
-
     match input_command::parse_command(args) {
         Ok(command) => run_command(command),
         Err(error) => eprintln!("{}", error),
@@ -116,7 +112,6 @@ fn print_help_section() {
 
     USAGE:
       add                               Starts a prompt to add an coauthor.
-
         --github                        Automatically fetch the information from github from username.
 
       list                              Lists all stored coauthors.
