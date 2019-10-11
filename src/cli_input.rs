@@ -14,7 +14,7 @@ pub fn request_new_coauthor() -> Coauthor {
     }
 }
 
-pub fn request_github_username() -> Coauthor {
+pub fn request_github_username() -> Result<Coauthor, String> {
     let username = ask_for_value("Github username");
 
     return github_api::get_coauthor_from_username(username.to_string());

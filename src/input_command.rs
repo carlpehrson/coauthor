@@ -73,11 +73,15 @@ mod tests {
     fn test_add_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "a"]),
-            Ok(InputCommand::Add)
+            Ok(InputCommand::Add(UserType::NormalUser))
         );
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "add"]),
-            Ok(InputCommand::Add)
+            Ok(InputCommand::Add(UserType::NormalUser))
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "add", "--github"]),
+            Ok(InputCommand::Add(UserType::GithubUser))
         );
     }
 

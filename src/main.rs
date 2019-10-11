@@ -21,20 +21,25 @@ fn main() -> Result<(), ExitFailure> {
         Ok(command) => run_command(command),
         Err(error) => eprintln!("{}", error),
     }
+
     Ok(())
 }
 
 fn run_command(command: InputCommand) {
     match command {
         InputCommand::Add(user_type) => {
-            let coauthor = match user_type {
-                UserType::NormalUser => cli_input::request_new_coauthor(),
-                UserType::GithubUser => cli_input::request_github_username(),
+            match user_type {
+                UserType::NormalUser => {
+                    let coauthor = cli_input::request_new_coauthor();
+                    coauthors_file::store_coauthor(coauthor.clone());
+                }
+
+                UserType::GithubUser => match cli_input::request_github_username() {
+                    Ok(coauthor) => coauthors_file::store_coauthor(coauthor.clone()),
+                    Err(error) => eprintln!("{}", error),
+                },
             };
-
-            coauthors_file::store_coauthor(coauthor.clone());
         }
-
 
         InputCommand::List => {
             let coauthors = coauthors_file::read_coauthors();
