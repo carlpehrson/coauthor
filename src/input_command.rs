@@ -7,6 +7,7 @@ pub enum InputCommand {
     Current,
     Clear,
     Help,
+    Version,
     Unknown(String),
 }
 
@@ -41,6 +42,8 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
         "clear" => return Ok(InputCommand::Clear),
 
         "h" | "help" => Ok(InputCommand::Help),
+
+        "-v" | "--version" | "version" => Ok(InputCommand::Version),
 
         anything => Ok(InputCommand::Unknown(anything.to_string())),
     }
@@ -142,6 +145,22 @@ mod tests {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "help"]),
             Ok(InputCommand::Help)
+        );
+    }
+
+    #[test]
+    fn test_version_command_parsing() {
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "-v"]),
+            Ok(InputCommand::Version)
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "version"]),
+            Ok(InputCommand::Version)
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "--version"]),
+            Ok(InputCommand::Version)
         );
     }
 
