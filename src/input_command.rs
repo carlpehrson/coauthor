@@ -1,6 +1,12 @@
 #[derive(Debug, PartialEq, Eq)]
+pub enum UserType {
+    NormalUser,
+    GithubUser,
+}
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum InputCommand {
-    Add,
+    Add(UserType),
     List,
     Remove(String),
     Set(Vec<String>),
@@ -17,7 +23,13 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
     }
 
     match arguments[1].as_ref() {
-        "a" | "add" => Ok(InputCommand::Add),
+        "a" | "add" => {
+            if arguments.len() >= 3 && arguments[2] == "--github" {
+                return Ok(InputCommand::Add(UserType::GithubUser));
+            }
+
+            return Ok(InputCommand::Add(UserType::NormalUser));
+        }
 
         "l" | "list" => Ok(InputCommand::List),
 
@@ -61,11 +73,15 @@ mod tests {
     fn test_add_command_parsing() {
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "a"]),
-            Ok(InputCommand::Add)
+            Ok(InputCommand::Add(UserType::NormalUser))
         );
         assert_eq!(
             parse_command(vec_of_strings!["bin/coauthor", "add"]),
-            Ok(InputCommand::Add)
+            Ok(InputCommand::Add(UserType::NormalUser))
+        );
+        assert_eq!(
+            parse_command(vec_of_strings!["bin/coauthor", "add", "--github"]),
+            Ok(InputCommand::Add(UserType::GithubUser))
         );
     }
 

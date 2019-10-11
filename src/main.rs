@@ -2,11 +2,12 @@ mod cli_input;
 mod coauthor;
 mod coauthors_file;
 mod git_commit_template_file;
+mod github_api;
 mod input_command;
 
 use coauthor::Coauthor;
 use exitfailure::ExitFailure;
-use input_command::InputCommand;
+use input_command::{InputCommand, UserType};
 use std::env;
 
 fn main() -> Result<(), ExitFailure> {
@@ -16,14 +17,22 @@ fn main() -> Result<(), ExitFailure> {
         Ok(command) => run_command(command),
         Err(error) => eprintln!("{}", error),
     }
+
     Ok(())
 }
 
 fn run_command(command: InputCommand) {
     match command {
-        InputCommand::Add => {
+        InputCommand::Add(UserType::NormalUser) => {
             let coauthor = cli_input::request_new_coauthor();
             coauthors_file::store_coauthor(coauthor.clone());
+        }
+
+        InputCommand::Add(UserType::GithubUser) => {
+            match cli_input::request_coauthor_from_github_user() {
+                Ok(coauthor) => coauthors_file::store_coauthor(coauthor.clone()),
+                Err(error) => eprintln!("{}", error),
+            }
         }
 
         InputCommand::List => {
@@ -101,6 +110,8 @@ fn print_help_section() {
 
     USAGE:
       add                               Starts a prompt to add an coauthor.
+        --github                        Automatically fetch the information from github from username.
+
       list                              Lists all stored coauthors.
       remove [username]                 Removes a coauthor from the local machine.
 
