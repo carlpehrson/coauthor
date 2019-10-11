@@ -1,6 +1,12 @@
 #[derive(Debug, PartialEq, Eq)]
+pub enum UserType {
+    NormalUser,
+    GithubUser,
+}
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum InputCommand {
-    Add,
+    Add(UserType),
     List,
     Remove(String),
     Set(Vec<String>),
@@ -17,7 +23,13 @@ pub fn parse_command(arguments: Vec<String>) -> Result<InputCommand, &'static st
     }
 
     match arguments[1].as_ref() {
-        "a" | "add" => Ok(InputCommand::Add),
+        "a" | "add" => {
+            if arguments.len() >= 3 && arguments[2] == "--github" {
+                return Ok(InputCommand::Add(UserType::GithubUser));
+            }
+
+            return Ok(InputCommand::Add(UserType::NormalUser));
+        }
 
         "l" | "list" => Ok(InputCommand::List),
 

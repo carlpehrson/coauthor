@@ -2,15 +2,20 @@ mod cli_input;
 mod coauthor;
 mod coauthors_file;
 mod git_commit_template_file;
+mod github_api;
 mod input_command;
 
 use coauthor::Coauthor;
 use exitfailure::ExitFailure;
-use input_command::InputCommand;
+use input_command::{InputCommand, UserType};
 use std::env;
 
 fn main() -> Result<(), ExitFailure> {
     let args: Vec<String> = env::args().collect();
+
+    // let username = "louiced";
+    // let response = github_api::get_coauthor_from_username(username.to_string());
+    // println!("{:#?}", response);
 
     match input_command::parse_command(args) {
         Ok(command) => run_command(command),
@@ -21,10 +26,15 @@ fn main() -> Result<(), ExitFailure> {
 
 fn run_command(command: InputCommand) {
     match command {
-        InputCommand::Add => {
-            let coauthor = cli_input::request_new_coauthor();
+        InputCommand::Add(user_type) => {
+            let coauthor = match user_type {
+                UserType::NormalUser => cli_input::request_new_coauthor(),
+                UserType::GithubUser => cli_input::request_github_username(),
+            };
+
             coauthors_file::store_coauthor(coauthor.clone());
         }
+
 
         InputCommand::List => {
             let coauthors = coauthors_file::read_coauthors();

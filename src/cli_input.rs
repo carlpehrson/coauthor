@@ -1,16 +1,23 @@
 use crate::coauthor::Coauthor;
+use crate::github_api;
 use std::io::{stdin, stdout, Write};
 
 pub fn request_new_coauthor() -> Coauthor {
     let username = ask_for_value("Username");
     let name = ask_for_value("Full name");
-    let email = ask_for_value("email");
+    let email = ask_for_value("Email");
 
     Coauthor {
         username,
         name,
         email,
     }
+}
+
+pub fn request_github_username() -> Coauthor {
+    let username = ask_for_value("Github username");
+
+    return github_api::get_coauthor_from_username(username.to_string());
 }
 
 fn ask_for_value(title: &'static str) -> String {
