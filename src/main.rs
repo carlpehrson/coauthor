@@ -69,6 +69,8 @@ fn run_command(command: InputCommand) {
 
         InputCommand::Help => print_help_section(),
 
+        InputCommand::Version => print_version(),
+
         InputCommand::Unknown(action) => {
             print_unkown_command(action);
             print_help_section();
@@ -87,6 +89,11 @@ fn print_unkown_command(command: String) {
     eprintln!("`{}` is not a valid action.", command)
 }
 
+fn print_version() {
+    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+    println!("{:#?}", VERSION);
+}
+
 fn print_help_section() {
     println!(
         r#"
@@ -102,6 +109,7 @@ fn print_help_section() {
       clear                             Removes all coauthors from the commit template.
 
       help                              Show this help section.
+      version                           Show current version of coauthor.
     "#
     );
 }
