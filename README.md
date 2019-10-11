@@ -1,5 +1,6 @@
 # Coauthor
-Automate the process of adding co-authors to git commits
+A tool to automatically add co-authors to git commit messages while doing
+pair programming or mob programming.
 
 ## Getting started
 Currently the only way to get Coauthor to your environment is get it through
