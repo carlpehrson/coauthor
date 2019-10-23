@@ -17,6 +17,13 @@ environment by executing this in your terminal (current path doesn't matter):
 cargo install --root ~/.cargo --git https://github.com/carlpehrson/coauthor --tag v0.2.0 coauthor
 ```
 
+Also, if you haven't already you have to export cargos bin folder into your path
+to make `coauthor` available throught your environment (typically put in your `~/.profile`):
+
+```
+export PATH="$PATH:$HOME/.cargo/bin"
+```
+
 ## Usage
 Coauthor comes with a few commands at your disposal which can be executed with
 the `coauthor` prefix, e.g. `coauthor add`. The commands can be divided
