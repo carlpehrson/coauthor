@@ -10,4 +10,4 @@ regex = "1"
 serde = { version = "1.0.92", features = ["derive"]}
 shellexpand = "1.0.0"
 toml = "0.5"
-reqwest = "0.8.1"
+reqwest = "0.9.22"
